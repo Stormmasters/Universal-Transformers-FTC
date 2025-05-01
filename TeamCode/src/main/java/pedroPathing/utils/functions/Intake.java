@@ -11,6 +11,7 @@ public class Intake {
     DcMotorEx intakeSlide, intake;
     private SlidesRunnable intakePID;
     private Thread intakeThread;
+    private double targetPosition;
     public boolean initialize(HardwareMap hardwareMap){
         if (!isInitialized){
             Logger.info("Init started");
@@ -66,6 +67,9 @@ public class Intake {
     }
     public boolean isExtended() {
         return isExtended;
+    }
+    public double getTargetPosition(){
+        return intakePID.getTargetPosiion();
     }
     public void stopIntakeThread() {
         Logger.info("Terminating intake thread...");

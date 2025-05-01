@@ -57,6 +57,7 @@ public class FraserTeleOp extends OpMode {
                 slides.extend();
             }
             rBumper = true;
+            gamepad1.rumbleBlips(2);
         }
         else {
             rBumper = false;
@@ -69,6 +70,7 @@ public class FraserTeleOp extends OpMode {
                 intake.extend();
             }
             lBumper = true;
+            gamepad1.rumbleBlips(4);
         }
         else {
             lBumper = false;
@@ -91,7 +93,7 @@ public class FraserTeleOp extends OpMode {
         intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
         telemetry.addLine("Intake slide position: " + intakeSlide.getCurrentPosition());
         telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
-        telemetry.addLine("Intake target position" + slides.slidePosition());
+        telemetry.addLine("Intake target position" + intake.getTargetPosition());
         telemetry.update();
 
     }

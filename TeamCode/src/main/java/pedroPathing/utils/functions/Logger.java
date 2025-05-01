@@ -10,8 +10,16 @@ public class Logger {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private static final String LOG_DIR = "/sdcard/FIRST";
     private static final int MAX_LOG_FILES = 40;
+    private static boolean disabled = false;
+    private static boolean initialized = false;
 
-    static {
+    public static void disable() {
+        disabled = true;
+    }
+
+    private static void init() {
+        if (disabled || initialized) return;
+
         try {
             manageOldLogs();
 
@@ -30,7 +38,11 @@ public class Logger {
                 csvWriter.write("Timestamp,Thread,Class,Level,Message\n");
                 csvWriter.flush();
             }
+
+            initialized = true;
         } catch (IOException e) {
+            // Prevent repeated attempts if it fails
+            disabled = true;
             e.printStackTrace();
         }
     }
@@ -51,6 +63,10 @@ public class Logger {
     }
 
     private static void log(String level, String message) {
+        if (disabled) return;
+        if (!initialized) init();
+        if (disabled) return; // init might disable if it fails
+
         String timestamp = sdf.format(new Date());
         String thread = Thread.currentThread().getName();
         String className = "UnknownClass";
@@ -82,6 +98,8 @@ public class Logger {
     public static void error(String message) { log("ERROR", message); }
 
     public static void close() {
+        if (disabled) return;
+
         try {
             if (textWriter != null) textWriter.close();
             if (csvWriter != null)  csvWriter.close();

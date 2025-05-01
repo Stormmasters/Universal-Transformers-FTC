@@ -1,6 +1,7 @@
 package pedroPathing.utils.functions;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import pedroPathing.utils.runnables.SlidesRunnable;
@@ -13,18 +14,16 @@ public class Intake {
     public boolean initialize(HardwareMap hardwareMap){
         if (!isInitialized){
             Logger.info("Init started");
-            intakeSlide = hardwareMap.get(DcMotorEx.class, "intakeSlide");
+            intakeSlide = hardwareMap.get(DcMotorEx.class, "EM");
             intakeSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intakeSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             intakeSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-            intake = hardwareMap.get(DcMotorEx.class, "intake");
-            intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+            intakeSlide.setDirection(DcMotorSimple.Direction.REVERSE);
             isInitialized = true;
             intakePID = new SlidesRunnable(intakeSlide, 0, 0.005, 0.00001, 0.0005, true);
             intakeThread = new Thread(intakePID);
             intakeThread.start();
+            intakePID.setMaxPower(0.7);
             Logger.info("Successfully initialized");
             return true;
         }
@@ -36,7 +35,7 @@ public class Intake {
     public boolean extend() {
         if (isInitialized && !isExtended){
             Logger.info("Extending slides...");
-            intakePID.setTarget(400);
+            intakePID.setTarget(200);
             isExtended = true;
             return true;
         }
@@ -52,7 +51,7 @@ public class Intake {
     public boolean retract() {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
-            intakePID.setTarget(0);
+            intakePID.setTarget(40);
             isExtended = false;
             return true;
         }
@@ -63,6 +62,19 @@ public class Intake {
         else {
             Logger.error("Failed to retract slides; already retracted");
             return false;
+        }
+    }
+    public boolean isExtended() {
+        return isExtended;
+    }
+    public void stopIntakeThread() {
+        Logger.info("Terminating intake thread...");
+        if (intakeThread != null) {
+            intakeThread.interrupt();
+            intakeThread = null;
+            Logger.info("Successfully terminated intakeThread");
+        } else {
+            Logger.warn("intakeThread is null, aborting termination");
         }
     }
 }

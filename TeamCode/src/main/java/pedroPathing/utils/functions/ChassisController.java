@@ -11,10 +11,10 @@ public class ChassisController {
     private DcMotorEx FL, BL, FR, BR;
     public boolean update(double LX, double LY, double RX, double sensitivity){
         if (LX <= 1 && LY <= 1 && RX <= 1 && sensitivity <= 1 && isInitialized){
-            FL.setPower((LX + LY - RX) * sensitivity);
-            BL.setPower((LX - LY - RX) * sensitivity);
-            FR.setPower((LX + LY + RX) * sensitivity);
-            BR.setPower((LX - LY + RX) * sensitivity);
+            FL.setPower((RX - LX - LY) * sensitivity);
+            BL.setPower((RX + LX - LY) * sensitivity);
+            FR.setPower((RX - LX + LY) * sensitivity);
+            BR.setPower((RX + LX + LY) * sensitivity);
             return true;
         }
         else if (!isInitialized){

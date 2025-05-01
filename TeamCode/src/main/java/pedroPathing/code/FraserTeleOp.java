@@ -5,34 +5,66 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import pedroPathing.utils.functions.ChassisController;
+import pedroPathing.utils.functions.Intake;
 import pedroPathing.utils.functions.Logger;
 import pedroPathing.utils.functions.Slides;
 
-@TeleOp(name = "FraserTeleOp Version 0.3")
+@TeleOp(name = "FraserTeleOp Version 0.5")
 public class FraserTeleOp extends OpMode {
     private Slides slides = new Slides();
+    private Intake intake = new Intake();
     private ChassisController chassis = new ChassisController();
-    private DcMotorEx slideMotor, linearMotor, FL, BL, FR, BR;
+    private DcMotorEx intakeMotor, intakeSlide, hangMotor;
     private double lStickX, lStickY, rStickX;
     double sensitivity = 1;
+    private boolean lBumper = false, rBumper = false;
 
     @Override
     public void init() {
+        Logger.disable();
         Logger.info("TeleOp Initialized");
         slides.initialize(hardwareMap);
         chassis.initialize(hardwareMap);
+        intake.initialize(hardwareMap);
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "IM");
+        intakeMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        intakeSlide = hardwareMap.get(DcMotorEx.class, "EM");
+        intakeSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        intakeSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        intakeSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        hangMotor = hardwareMap.get(DcMotorEx.class, "HM");
+        hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        hangMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        hangMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
     @Override
     public void loop() {
         chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
-        if (gamepad1.right_bumper && !slides.isExtended()) {
-            slides.extend();
-            Logger.info("Asking Slides to extend");
+        if (gamepad1.right_bumper) {
+            if (slides.isExtended() && !rBumper){
+                slides.retract();
+            }
+            else if (!rBumper){
+                slides.extend();
+            }
+            rBumper = true;
         }
-        if (gamepad1.left_bumper && slides.isExtended()){
-            Logger.info("Asking Slides to retract");
-            slides.retract();
+        else {
+            rBumper = false;
+        }
+        if (gamepad1.left_bumper) {
+            if (intake.isExtended() && !lBumper){
+                intake.retract();
+            }
+            else if (!lBumper){
+                intake.extend();
+            }
+            lBumper = true;
+        }
+        else {
+            lBumper = false;
         }
         if (gamepad1.dpad_up && sensitivity < 1){
             sensitivity += 0.01;
@@ -40,11 +72,26 @@ public class FraserTeleOp extends OpMode {
         if (gamepad1.dpad_down && sensitivity > 0.1){
             sensitivity -= 0.01;
         }
+        if (gamepad1.dpad_left){
+            hangMotor.setPower(1);
+        }
+        else if (gamepad1.dpad_right){
+            hangMotor.setPower(-1);
+        }
+        else {
+            hangMotor.setPower(0);
+        }
+        intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+        telemetry.addLine("Intake slide position: " + intakeSlide.getCurrentPosition());
+        telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
+        telemetry.addLine("Intake target position" + slides.slidePosition());
+        telemetry.update();
     }
 
     @Override
     public void stop() {
         Logger.info("Asking Slides to terminate threads...");
         slides.stopSlideThreads();
+        intake.stopIntakeThread();
     }
 }

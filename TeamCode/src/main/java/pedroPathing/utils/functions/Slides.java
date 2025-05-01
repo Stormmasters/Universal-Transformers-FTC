@@ -23,7 +23,7 @@ public class Slides {
             slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             slideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-            arm = hardwareMap.get(ServoImplEx.class, "arm");
+            //arm = hardwareMap.get(ServoImplEx.class, "arm");
             isInitialized = true;
             slidePID = new SlidesRunnable(slideMotor, 0, 0.005, 0.00001, 0.0005, false);
             slideThread = new Thread(slidePID, "SlidePIDThread");
@@ -40,7 +40,7 @@ public class Slides {
         if (isInitialized && !isExtended){
             Logger.info("Extending slides...");
             slidePID.setTarget(500);
-            arm.setPosition(armExtended);
+            //arm.setPosition(armExtended);
             isExtended = true;
             return true;
         }
@@ -57,7 +57,7 @@ public class Slides {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
             slidePID.setTarget(0);
-            arm.setPosition(armRetracted);
+            //arm.setPosition(armRetracted);
             isExtended = false;
             return true;
         }
@@ -80,13 +80,8 @@ public class Slides {
         else {
             Logger.warn("slideThread is null, aborting termination");
         }
-        if (armThread != null) {
-            armThread.interrupt();
-            armThread = null;
-            Logger.info("Successfully terminated armThread");
-        }
-        else {
-            Logger.warn("armThread is null, aborting termination");
-        }
+    }
+    public double slidePosition(){
+        return slidePID.getTargetPosiion();
     }
 }

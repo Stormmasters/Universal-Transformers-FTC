@@ -50,15 +50,6 @@ public class SlidesRunnable implements Runnable {
 
             double power = kP * error + kI * integral + kD * derivative;
 
-            if (Math.abs(error) < 50){
-                power /= 4;
-            }
-            if (Math.abs(error) < 20){
-                power /= 4;
-            }
-            // these if statements definitely not optimal, I'll admit
-            // better tuned PID constants coming soonish
-
             slideMotor.setPower(clamp(power, -maxPower, maxPower));
 
             try {

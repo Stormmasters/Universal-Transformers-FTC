@@ -20,7 +20,7 @@ public class Intake {
             intakeSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
             intakeSlide.setDirection(DcMotorSimple.Direction.REVERSE);
             isInitialized = true;
-            intakePID = new SlidesRunnable(intakeSlide, 0, 0.005, 0.00001, 0.0005, true);
+            intakePID = new SlidesRunnable(intakeSlide, 0, 0.01, 0.00003, 0.0008, true);
             intakeThread = new Thread(intakePID);
             intakeThread.start();
             intakePID.setMaxPower(0.7);

@@ -1,8 +1,11 @@
 package pedroPathing.code;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import java.util.List;
 
 import pedroPathing.utils.functions.ChassisController;
 import pedroPathing.utils.functions.Intake;
@@ -37,6 +40,10 @@ public class FraserTeleOp extends OpMode {
         hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         hangMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
     }
 
     @Override
@@ -86,6 +93,7 @@ public class FraserTeleOp extends OpMode {
         telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
         telemetry.addLine("Intake target position" + slides.slidePosition());
         telemetry.update();
+
     }
 
     @Override

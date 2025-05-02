@@ -5,25 +5,25 @@ import com.pedropathing.localization.constants.*;
 
 public class LConstants {
     static {
-        ThreeWheelConstants.forwardTicksToInches = .001989436789;
-        ThreeWheelConstants.strafeTicksToInches = .001989436789;
-        ThreeWheelConstants.turnTicksToInches = .001989436789;
-        ThreeWheelConstants.leftY = 1;
-        ThreeWheelConstants.rightY = -1;
-        ThreeWheelConstants.strafeX = -2.5;
-        ThreeWheelConstants.leftEncoder_HardwareMapName = "FL";
-        ThreeWheelConstants.rightEncoder_HardwareMapName = "BR";
-        ThreeWheelConstants.strafeEncoder_HardwareMapName = "FR";
-        ThreeWheelConstants.leftEncoderDirection = Encoder.REVERSE;
-        ThreeWheelConstants.rightEncoderDirection = Encoder.REVERSE;
-        ThreeWheelConstants.strafeEncoderDirection = Encoder.FORWARD;
+        ThreeWheelIMUConstants.forwardTicksToInches = 0.001;
+        ThreeWheelIMUConstants.strafeTicksToInches = 0.001;
+        ThreeWheelIMUConstants.turnTicksToInches = 0.006;
+        ThreeWheelIMUConstants.leftY = 1;
+        ThreeWheelIMUConstants.rightY = -1;
+        ThreeWheelIMUConstants.strafeX = -2.5;
+        ThreeWheelIMUConstants.leftEncoder_HardwareMapName = "FL";
+        ThreeWheelIMUConstants.rightEncoder_HardwareMapName = "FR";
+        ThreeWheelIMUConstants.strafeEncoder_HardwareMapName = "FL";
+        ThreeWheelIMUConstants.leftEncoderDirection = Encoder.REVERSE;
+        ThreeWheelIMUConstants.rightEncoderDirection = Encoder.FORWARD;
+        ThreeWheelIMUConstants.strafeEncoderDirection = Encoder.FORWARD;
 
-        DriveEncoderConstants.forwardTicksToInches = 1;
-        DriveEncoderConstants.strafeTicksToInches = 1;
-        DriveEncoderConstants.turnTicksToInches = 1;
+        DriveEncoderConstants.forwardTicksToInches = 0.005;
+        DriveEncoderConstants.strafeTicksToInches = 0.005;
+        DriveEncoderConstants.turnTicksToInches = 0.0008;
 
-        DriveEncoderConstants.robot_Width = 17.8;
-        DriveEncoderConstants.robot_Length = 16.6;
+        DriveEncoderConstants.robot_Width = 18;
+        DriveEncoderConstants.robot_Length = 18;
     }
 }
 

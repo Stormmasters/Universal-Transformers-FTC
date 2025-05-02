@@ -21,6 +21,7 @@ public class FraserTeleOp extends OpMode {
     private double lStickX, lStickY, rStickX;
     double sensitivity = 1;
     private boolean lBumper = false, rBumper = false;
+    private DcMotorEx FL, BL, FR, BR;
 
     @Override
     public void init() {
@@ -40,6 +41,10 @@ public class FraserTeleOp extends OpMode {
         hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         hangMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        FL = hardwareMap.get(DcMotorEx.class, "FL");
+        BL = hardwareMap.get(DcMotorEx.class, "BL");
+        FR = hardwareMap.get(DcMotorEx.class, "FR");
+        BR = hardwareMap.get(DcMotorEx.class, "BR");
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule module : allHubs) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -48,7 +53,11 @@ public class FraserTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
+        //chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
+        if (gamepad1.x){FL.setPower(0.3);} else {FL.setPower(0);} // rv
+        if (gamepad1.y){FR.setPower(0.3);} else {FR.setPower(0);} // no
+        if (gamepad1.a){BR.setPower(0.3);} else {BR.setPower(0);} // no
+        if (gamepad1.b){BL.setPower(0.3);} else {BL.setPower(0);} // rv
         if (gamepad1.right_bumper) {
             if (slides.isExtended() && !rBumper){
                 slides.retract();
@@ -90,12 +99,14 @@ public class FraserTeleOp extends OpMode {
         else {
             hangMotor.setPower(0);
         }
+        if (gamepad1.a){
+            slides.resetSlides();
+        }
         intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
         telemetry.addLine("Intake slide position: " + intakeSlide.getCurrentPosition());
         telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
         telemetry.addLine("Intake target position" + intake.getTargetPosition());
         telemetry.update();
-
     }
 
     @Override

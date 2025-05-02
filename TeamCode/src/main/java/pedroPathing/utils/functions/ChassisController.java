@@ -9,12 +9,13 @@ public class ChassisController {
     private boolean isInitialized = false;
     ServoImplEx arm;
     private DcMotorEx FL, BL, FR, BR;
+    // e.g, LX is left controller x axis
     public boolean update(double LX, double LY, double RX, double sensitivity){
         if (LX <= 1 && LY <= 1 && RX <= 1 && sensitivity <= 1 && isInitialized){
-            FL.setPower((RX - LX - LY) * sensitivity);
-            BL.setPower((RX + LX - LY) * sensitivity);
-            FR.setPower((RX - LX + LY) * sensitivity);
-            BR.setPower((RX + LX + LY) * sensitivity);
+            FL.setPower((-LY - LX - RX) * sensitivity); //reversed
+            BL.setPower((-LY + LX - RX) * sensitivity); //reversed
+            FR.setPower((LY + LX - RX) * sensitivity);
+            BR.setPower((LY - LX - RX) * sensitivity);
             return true;
         }
         else if (!isInitialized){

@@ -16,6 +16,9 @@ public class Slides {
     public boolean isExtended(){
         return isExtended;
     }
+    public void resetSlides(){
+        slidePID.resetSlides();
+    }
     public boolean initialize(HardwareMap hardwareMap){
         if (!isInitialized){
             Logger.info("Init started");
@@ -25,7 +28,7 @@ public class Slides {
             slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
             //arm = hardwareMap.get(ServoImplEx.class, "arm");
             isInitialized = true;
-            slidePID = new SlidesRunnable(slideMotor, 0, 0.005, 0.00001, 0.0005, false);
+            slidePID = new SlidesRunnable(slideMotor, 0, 0.005, 0.00001, 0.0005, false, 0.8);
             slideThread = new Thread(slidePID, "SlidePIDThread");
             slideThread.start();
             Logger.info("Successfully initialized");

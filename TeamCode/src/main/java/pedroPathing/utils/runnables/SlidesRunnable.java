@@ -2,6 +2,7 @@ package pedroPathing.utils.runnables;
 
 import static com.pedropathing.pathgen.MathFunctions.clamp;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import pedroPathing.utils.functions.Logger;
@@ -15,13 +16,14 @@ public class SlidesRunnable implements Runnable {
     private double error = 0, lastError = 0, integral = 0, derivative = 0;
     private int currentPosition;
 
-    public SlidesRunnable(DcMotorEx slideMotor, double initialTarget, double kP, double kI, double kD, boolean isReversed) {
+    public SlidesRunnable(DcMotorEx slideMotor, double initialTarget, double kP, double kI, double kD, boolean isReversed, double maxPower) {
         this.slideMotor = slideMotor;
         this.targetPosition = initialTarget;
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
         this.isReversed = isReversed;
+        this.maxPower = maxPower;
     }
 
     public void setMaxPower(double maxPower){
@@ -33,6 +35,11 @@ public class SlidesRunnable implements Runnable {
     }
     public double getTargetPosiion(){
         return targetPosition;
+    }
+    public void resetSlides(){
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // this totally wont cause problems later lol
     }
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
@@ -76,7 +83,7 @@ public class SlidesRunnable implements Runnable {
             if (Math.abs(error) < 50) {
                 integral += error;
                 integral *= 0.9;
-                integral = clamp(integral, -5000, 5000);
+                integral = clamp(integral, -500, 500);
             }
             else {
                 integral = 0;

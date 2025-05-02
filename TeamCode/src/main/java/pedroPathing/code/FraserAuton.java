@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import pedroPathing.utils.functions.ChassisController;
 import pedroPathing.utils.runnables.AutonChassisRunnable;
 import pedroPathing.utils.runnables.SlidesRunnable;
 
+@Autonomous(name = "FraserAuton")
 public class FraserAuton extends LinearOpMode {
     private Follower follower;
     private AutonChassisRunnable pPathPID;
@@ -34,6 +36,5 @@ public class FraserAuton extends LinearOpMode {
         pPathThread = new Thread(pPathThread, "PedroPathingThread");
         waitForStart();
         pPathThread.start();
-        System.out.println("test");
     }
 }

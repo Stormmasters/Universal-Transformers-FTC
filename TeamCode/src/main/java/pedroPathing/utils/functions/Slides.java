@@ -1,5 +1,6 @@
 package pedroPathing.utils.functions;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -24,11 +25,11 @@ public class Slides {
             Logger.info("Init started");
             slideMotor = hardwareMap.get(DcMotorEx.class, "LM");
             slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            slideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
             //arm = hardwareMap.get(ServoImplEx.class, "arm");
             isInitialized = true;
-            slidePID = new SlidesRunnable(slideMotor, 0, 0.005, 0.00001, 0.0005, false, 0.8);
+            slidePID = new SlidesRunnable(slideMotor, 0, 0.06, 0.0003, 0.001, false, 0.8);
             slideThread = new Thread(slidePID, "SlidePIDThread");
             slideThread.start();
             Logger.info("Successfully initialized");

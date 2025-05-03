@@ -38,7 +38,7 @@ public class SlidesRunnable implements Runnable {
     }
     public void resetSlides(){
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // this totally wont cause problems later lol
     }
     public void run() {
@@ -79,7 +79,7 @@ public class SlidesRunnable implements Runnable {
             // it's mostly stopped and quickly accounts for the error. And that's
             // how it works. --Fraser
 
-            error = targetPosition - slideMotor.getCurrentPosition();
+            error = targetPosition + slideMotor.getCurrentPosition();
             if (Math.abs(error) < 50) {
                 integral += error;
                 integral *= 0.9;

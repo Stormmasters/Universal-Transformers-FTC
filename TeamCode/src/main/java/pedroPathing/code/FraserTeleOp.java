@@ -3,6 +3,7 @@ package pedroPathing.code;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
@@ -35,11 +36,11 @@ public class FraserTeleOp extends OpMode {
         intakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         intakeSlide = hardwareMap.get(DcMotorEx.class, "EM");
         intakeSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        intakeSlide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intakeSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         hangMotor = hardwareMap.get(DcMotorEx.class, "HM");
         hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        hangMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        hangMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hangMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         FL = hardwareMap.get(DcMotorEx.class, "FL");
         BL = hardwareMap.get(DcMotorEx.class, "BL");
@@ -53,11 +54,7 @@ public class FraserTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        //chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
-        if (gamepad1.x){FL.setPower(0.3);} else {FL.setPower(0);} // rv
-        if (gamepad1.y){FR.setPower(0.3);} else {FR.setPower(0);} // no
-        if (gamepad1.a){BR.setPower(0.3);} else {BR.setPower(0);} // no
-        if (gamepad1.b){BL.setPower(0.3);} else {BL.setPower(0);} // rv
+        chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
         if (gamepad1.right_bumper) {
             if (slides.isExtended() && !rBumper){
                 slides.retract();
@@ -99,13 +96,11 @@ public class FraserTeleOp extends OpMode {
         else {
             hangMotor.setPower(0);
         }
-        if (gamepad1.a){
-            slides.resetSlides();
-        }
         intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
         telemetry.addLine("Intake slide position: " + intakeSlide.getCurrentPosition());
         telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
-        telemetry.addLine("Intake target position" + intake.getTargetPosition());
+        telemetry.addLine("Intake target position: " + intake.getTargetPosition());
+        telemetry.addLine("Intake slide mode: " + intakeSlide.getMode());
         telemetry.update();
     }
 

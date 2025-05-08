@@ -1,13 +1,12 @@
 package pedroPathing.utils.functions;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import pedroPathing.utils.runnables.SlidesRunnable;
 
-public class Slides {
+public class LIft {
     private DcMotorEx slideMotor = null;
     private boolean isExtended = false, isInitialized = false;
     private Thread slideThread, armThread;

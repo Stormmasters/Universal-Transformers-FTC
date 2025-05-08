@@ -3,22 +3,21 @@ package pedroPathing.code;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
 
 import pedroPathing.utils.functions.ChassisController;
-import pedroPathing.utils.functions.Intake;
+import pedroPathing.utils.functions.Extension;
 import pedroPathing.utils.functions.Logger;
-import pedroPathing.utils.functions.Slides;
+import pedroPathing.utils.functions.Lift;
 
 @TeleOp(name = "FraserTeleOp Version 0.5")
 public class FraserTeleOp extends OpMode {
-    private Slides slides = new Slides();
-    private Intake intake = new Intake();
+    private Lift lift = new Lift();
+    private Extension extension = new Extension();
     private ChassisController chassis = new ChassisController();
-    private DcMotorEx intakeMotor, intakeSlide, hangMotor;
+    private DcMotorEx intakeMotor, intakeSlide, hangMotor, slideMotor;
     private double lStickX, lStickY, rStickX;
     double sensitivity = 1;
     private boolean lBumper = false, rBumper = false;
@@ -28,16 +27,9 @@ public class FraserTeleOp extends OpMode {
     public void init() {
         Logger.disable();
         Logger.info("TeleOp Initialized");
-        slides.initialize(hardwareMap);
+        lift.initialize(hardwareMap);
         chassis.initialize(hardwareMap);
-        intake.initialize(hardwareMap);
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "IM");
-        intakeMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        intakeSlide = hardwareMap.get(DcMotorEx.class, "EM");
-        intakeSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeSlide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        intakeSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        extension.initialize(hardwareMap);
         hangMotor = hardwareMap.get(DcMotorEx.class, "HM");
         hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -56,11 +48,11 @@ public class FraserTeleOp extends OpMode {
     public void loop() {
         chassis.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, sensitivity);
         if (gamepad1.right_bumper) {
-            if (slides.isExtended() && !rBumper){
-                slides.retract();
+            if (lift.isExtended() && !rBumper){
+                lift.retract();
             }
             else if (!rBumper){
-                slides.extend();
+                lift.extend();
             }
             rBumper = true;
             gamepad1.rumbleBlips(2);
@@ -69,11 +61,11 @@ public class FraserTeleOp extends OpMode {
             rBumper = false;
         }
         if (gamepad1.left_bumper) {
-            if (intake.isExtended() && !lBumper){
-                intake.retract();
+            if (extension.isExtended() && !lBumper){
+                extension.retract();
             }
             else if (!lBumper){
-                intake.extend();
+                extension.extend();
             }
             lBumper = true;
             gamepad1.rumbleBlips(4);
@@ -97,17 +89,20 @@ public class FraserTeleOp extends OpMode {
             hangMotor.setPower(0);
         }
         intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-        telemetry.addLine("Intake slide position: " + intakeSlide.getCurrentPosition());
-        telemetry.addLine("Intake slide power: " + intakeSlide.getPower());
-        telemetry.addLine("Intake target position: " + intake.getTargetPosition());
-        telemetry.addLine("Intake slide mode: " + intakeSlide.getMode());
+        telemetry.addLine("Intake slide position: ");
+        telemetry.addLine("Intake slide power: ");
+        telemetry.addLine("Intake target position: ");
+        telemetry.addLine("Intake slide mode: ");
+        telemetry.addLine("Slide position: ");
+        telemetry.addLine("Slide power: ");
+        telemetry.addLine("Slide mode: ");
         telemetry.update();
     }
 
     @Override
     public void stop() {
         Logger.info("Asking Slides to terminate threads...");
-        slides.stopSlideThreads();
-        intake.stopIntakeThread();
+        lift.stopSlideThreads();
+        extension.stopIntakeThread();
     }
 }

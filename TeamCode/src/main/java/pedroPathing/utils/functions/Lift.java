@@ -1,35 +1,30 @@
 package pedroPathing.utils.functions;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import pedroPathing.utils.runnables.SlidesRunnable;
 
-public class LIft {
-    private DcMotorEx slideMotor = null;
+public class Lift {
     private boolean isExtended = false, isInitialized = false;
     private Thread slideThread, armThread;
-    private SlidesRunnable slidePID;
+    private SlidesRunnable liftPID;
     private double armRetracted = 0, armExtended = 1;
     ServoImplEx arm;
     public boolean isExtended(){
         return isExtended;
     }
     public void resetSlides(){
-        slidePID.resetSlides();
+        liftPID.resetSlides();
     }
     public boolean initialize(HardwareMap hardwareMap){
         if (!isInitialized){
             Logger.info("Init started");
-            slideMotor = hardwareMap.get(DcMotorEx.class, "LM");
-            slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
             //arm = hardwareMap.get(ServoImplEx.class, "arm");
             isInitialized = true;
-            slidePID = new SlidesRunnable(slideMotor, 0, 0.06, 0.0003, 0.001, false, 0.8);
-            slideThread = new Thread(slidePID, "SlidePIDThread");
+            liftPID = new SlidesRunnable(hardwareMap, "LM", 0, 0.06, 0.0003, 0.001, false, 0.8);
+            slideThread = new Thread(liftPID, "SlidePIDThread");
             slideThread.start();
             Logger.info("Successfully initialized");
             return true;
@@ -42,7 +37,7 @@ public class LIft {
     public boolean extend() {
         if (isInitialized && !isExtended){
             Logger.info("Extending slides...");
-            slidePID.setTarget(500);
+            liftPID.setTarget(500);
             //arm.setPosition(armExtended);
             isExtended = true;
             return true;
@@ -59,7 +54,7 @@ public class LIft {
     public boolean retract() {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
-            slidePID.setTarget(0);
+            liftPID.setTarget(0);
             //arm.setPosition(armRetracted);
             isExtended = false;
             return true;
@@ -84,7 +79,7 @@ public class LIft {
             Logger.warn("slideThread is null, aborting termination");
         }
     }
-    public double slidePosition(){
-        return slidePID.getTargetPosiion();
-    }
+    public double getSlidePosition(){ return liftPID.getCurrentPosition(); }
+    public double getSlidePower(){ return liftPID.getPower(); }
+    public DcMotor.RunMode getSlideMode(){ return liftPID.getMode(); }
 }

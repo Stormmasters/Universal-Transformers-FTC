@@ -17,8 +17,7 @@ public class FraserTeleOp extends OpMode {
     private Lift lift = new Lift();
     private Extension extension = new Extension();
     private ChassisController chassis = new ChassisController();
-    private DcMotorEx intakeMotor, intakeSlide, hangMotor, slideMotor;
-    private double lStickX, lStickY, rStickX;
+    private DcMotorEx intakeMotor, hangMotor;
     double sensitivity = 1;
     private boolean lBumper = false, rBumper = false;
     private DcMotorEx FL, BL, FR, BR;
@@ -30,6 +29,9 @@ public class FraserTeleOp extends OpMode {
         lift.initialize(hardwareMap);
         chassis.initialize(hardwareMap);
         extension.initialize(hardwareMap);
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "IM");
+        intakeMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         hangMotor = hardwareMap.get(DcMotorEx.class, "HM");
         hangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -89,13 +91,13 @@ public class FraserTeleOp extends OpMode {
             hangMotor.setPower(0);
         }
         intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-        telemetry.addLine("Intake slide position: ");
-        telemetry.addLine("Intake slide power: ");
-        telemetry.addLine("Intake target position: ");
-        telemetry.addLine("Intake slide mode: ");
-        telemetry.addLine("Slide position: ");
-        telemetry.addLine("Slide power: ");
-        telemetry.addLine("Slide mode: ");
+        telemetry.addLine("Intake slide position: " + extension.getSlidePosition());
+        telemetry.addLine("Intake slide power: " + extension.getSlidePower());
+        telemetry.addLine("Intake target position: " + extension.getTargetPosition());
+        telemetry.addLine("Intake slide mode: " + extension.getSlideMode());
+        telemetry.addLine("Slide position: " + lift.getSlidePosition());
+        telemetry.addLine("Slide power: " + lift.getSlidePower());
+        telemetry.addLine("Slide mode: " + lift.getSlideMode());
         telemetry.update();
     }
 

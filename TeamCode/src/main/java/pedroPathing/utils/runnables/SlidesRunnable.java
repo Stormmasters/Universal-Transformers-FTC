@@ -4,6 +4,8 @@ import static com.pedropathing.pathgen.MathFunctions.clamp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import pedroPathing.utils.functions.Logger;
 
@@ -15,9 +17,16 @@ public class SlidesRunnable implements Runnable {
     private double maxPower = 0.8;
     private double error = 0, lastError = 0, integral = 0, derivative = 0;
     private int currentPosition;
+    private String identifier;
 
-    public SlidesRunnable(DcMotorEx slideMotor, double initialTarget, double kP, double kI, double kD, boolean isReversed, double maxPower) {
-        this.slideMotor = slideMotor;
+    public SlidesRunnable(HardwareMap hardwareMap, String identifier, double initialTarget, double kP, double kI, double kD, boolean isReversed, double maxPower) {
+        slideMotor = hardwareMap.get(DcMotorEx.class, identifier);
+        slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        if (isReversed){
+            slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        }
         this.targetPosition = initialTarget;
         this.kP = kP;
         this.kI = kI;
@@ -25,7 +34,9 @@ public class SlidesRunnable implements Runnable {
         this.isReversed = isReversed;
         this.maxPower = maxPower;
     }
-
+    public double getCurrentPosition(){
+        return slideMotor.getCurrentPosition();
+    }
     public void setMaxPower(double maxPower){
         this.maxPower = maxPower;
     }
@@ -36,11 +47,13 @@ public class SlidesRunnable implements Runnable {
     public double getTargetPosiion(){
         return targetPosition;
     }
+    public DcMotor.RunMode getMode(){ return slideMotor.getMode(); }
     public void resetSlides(){
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // this totally wont cause problems later lol
     }
+    public double getPower(){ return slideMotor.getPower(); }
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             // PID control loop explanation:

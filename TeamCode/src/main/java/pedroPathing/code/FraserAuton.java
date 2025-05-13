@@ -14,10 +14,16 @@ import pedroPathing.constants.LConstants;
 import pedroPathing.utils.functions.ChassisController;
 import pedroPathing.utils.runnables.AutonChassisRunnable;
 import pedroPathing.utils.runnables.SlidesRunnable;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "FraserAuton")
 public class FraserAuton extends LinearOpMode {
     private Follower follower;
+    private OpenCvWebcam webcam;
     private AutonChassisRunnable pPathPID;
     private Thread pPathThread;
     private PathChain circle;

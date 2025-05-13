@@ -12,6 +12,9 @@ import pedroPathing.utils.functions.Extension;
 import pedroPathing.utils.functions.Logger;
 import pedroPathing.utils.functions.Lift;
 
+// WAIT!!! Before you modify this code, remember:
+// You can't access motors defined in separate threads (DO NOT ATTEMPT THIS, IT WILL CAUSE MAJOR PROBLEMS)
+
 @TeleOp(name = "FraserTeleOp Version 0.5")
 public class FraserTeleOp extends OpMode {
     private Lift lift = new Lift();

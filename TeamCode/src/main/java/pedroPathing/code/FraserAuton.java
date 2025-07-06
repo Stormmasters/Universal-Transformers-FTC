@@ -7,24 +7,16 @@ import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import java.util.ArrayList;
-
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import pedroPathing.utils.functions.ChassisController;
-import pedroPathing.utils.runnables.AutonChassisRunnable;
-import pedroPathing.utils.runnables.SlidesRunnable;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
+
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "FraserAuton")
 public class FraserAuton extends LinearOpMode {
     private Follower follower;
     private OpenCvWebcam webcam;
-    private AutonChassisRunnable pPathPID;
+    private PedroController pPathPID;
     private Thread pPathThread;
     private PathChain circle;
     private double RADIUS = 10;
@@ -38,7 +30,7 @@ public class FraserAuton extends LinearOpMode {
                 .addPath(new BezierCurve(new Point(0,2*RADIUS, Point.CARTESIAN), new Point(-RADIUS,2*RADIUS, Point.CARTESIAN), new Point(-RADIUS, RADIUS, Point.CARTESIAN)))
                 .addPath(new BezierCurve(new Point(-RADIUS, RADIUS, Point.CARTESIAN), new Point(-RADIUS,0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)))
                 .build();
-        pPathPID = new AutonChassisRunnable(follower, circle);
+        pPathPID = new PedroController(follower, circle);
         pPathThread = new Thread(pPathThread, "PedroPathingThread");
         waitForStart();
         pPathThread.start();

@@ -1,9 +1,7 @@
 package pedroPathing.utils.functions;
 
 // Explanation of logger:
-// Essentially, it's FTC logs in a format similar to kernel messages. This was mostly vibecoded
-// partially because I don't know how to write to storage in an environment as locked down as an
-// FTC opmode and partially because I couldn't be bothered to format anything in java.
+// Robust FTC Logging. This was mostly vibecoded, idk how most of this works tbh
 
 import java.io.*;
 import java.text.SimpleDateFormat;

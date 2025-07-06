@@ -1,23 +1,20 @@
 package pedroPathing.utils.functions;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import pedroPathing.utils.runnables.SlidesRunnable;
+import pedroPathing.constants.ExtensionPIDConstants;
+import pedroPathing.constants.LIftPIDConstants;
+import pedroPathing.utils.controllers.SlidesPID;
 
 public class Extension {
     private boolean isExtended = false, isInitialized = false;
-    private SlidesRunnable extensionPID;
-    private Thread intakeThread;
+    private SlidesPID extensionPID;
     private double targetPosition;
-    public boolean initialize(HardwareMap hardwareMap){
+    public boolean initialize(DcMotorEx extensionMotor){
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
-            extensionPID = new SlidesRunnable(hardwareMap, "EM", 0, 0.01, 0.00003, 0.0008, true, 0.8);
-            intakeThread = new Thread(extensionPID);
-            intakeThread.start();
-            extensionPID.setMaxPower(0.7);
+            extensionPID = new SlidesPID(extensionMotor, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
             Logger.info("Successfully initialized");
             return true;
         }
@@ -29,7 +26,7 @@ public class Extension {
     public boolean extend() {
         if (isInitialized && !isExtended){
             Logger.info("Extending slides...");
-            extensionPID.setTarget(200);
+            extensionPID.setTarget(LIftPIDConstants.extendedPosition);
             isExtended = true;
             return true;
         }
@@ -45,7 +42,7 @@ public class Extension {
     public boolean retract() {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
-            extensionPID.setTarget(40);
+            extensionPID.setTarget(LIftPIDConstants.retractedPosition);
             isExtended = false;
             return true;
         }
@@ -61,20 +58,7 @@ public class Extension {
     public boolean isExtended() {
         return isExtended;
     }
-    public double getTargetPosition(){
-        return extensionPID.getTargetPosiion();
+    public void update(){
+        extensionPID.update();
     }
-    public void stopIntakeThread() {
-        Logger.info("Terminating intake thread...");
-        if (intakeThread != null) {
-            intakeThread.interrupt();
-            intakeThread = null;
-            Logger.info("Successfully terminated intakeThread");
-        } else {
-            Logger.warn("intakeThread is null, aborting termination");
-        }
-    }
-    public double getSlidePosition(){ return extensionPID.getCurrentPosition(); }
-    public double getSlidePower(){ return extensionPID.getPower(); }
-    public DcMotor.RunMode getSlideMode(){ return extensionPID.getMode(); }
 }

@@ -25,7 +25,7 @@ jobs:
 
       - name: Fetch and update upstream branch
         run: |
-          git remote add upstream https://example-git-repo.com
+          git remote add upstream https://github.com/Pedro-Pathing/Quickstart.git
           git fetch upstream
           git checkout -B upstream upstream/master
 

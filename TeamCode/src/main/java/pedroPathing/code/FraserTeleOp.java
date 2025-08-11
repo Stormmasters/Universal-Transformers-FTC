@@ -27,8 +27,8 @@ public class FraserTeleOp extends OpMode {
         Logger.info("TeleOp Initialized");
         robotHardware = new RobotHardware(hardwareMap);
         chassis.initialize(robotHardware.FL, robotHardware.BL, robotHardware.FR, robotHardware.BR);
-        lift.initialize(robotHardware.liftMotor1, robotHardware.liftMotor2);
-        extension.initialize(robotHardware.extensionMotor, robotHardware.IS1);
+        lift.initialize(robotHardware.liftMotor1, robotHardware.liftEnc1, robotHardware.liftMotor2, robotHardware.liftEnc2);
+        extension.initialize(robotHardware.extensionMotor, robotHardware.extEnc ,robotHardware.IS1);
     }
 
     @Override

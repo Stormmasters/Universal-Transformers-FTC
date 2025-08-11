@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import pedroPathing.utils.functions.Logger;
 
 public class SlidesPID {
-    private final DcMotorEx slideMotor;
+    private final DcMotorEx slideMotor, slideEnc;
     private boolean isReversed;
     private double targetPosition;
     private final double kP, kD;
     private double maxPower = 0.8;
     private double error = 0, lastError = 0, derivative = 0;
     private int currentPosition;
-    public SlidesPID(DcMotorEx slideMotor, double initialTarget, double kP, double kD, boolean isReversed, double maxPower) {
+    public SlidesPID(DcMotorEx slideMotor, DcMotorEx slideEnc, double initialTarget, double kP, double kD, boolean isReversed, double maxPower) {
         this.slideMotor = slideMotor;
         slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -23,6 +23,7 @@ public class SlidesPID {
         if (isReversed){
             slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
         }
+        this.slideEnc = slideEnc;
         this.targetPosition = initialTarget;
         this.kP = kP;
         this.kD = kD;

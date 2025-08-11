@@ -13,11 +13,11 @@ public class Extension {
     private SlidesPID extensionPID;
     private double targetPosition;
     Servo IS1;
-    public boolean initialize(DcMotorEx extensionMotor, Servo IS1){
+    public boolean initialize(DcMotorEx extensionMotor, DcMotorEx extEnc, Servo IS1){
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
-            extensionPID = new SlidesPID(extensionMotor, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
+            extensionPID = new SlidesPID(extensionMotor, extEnc, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
             Logger.info("Successfully initialized");
             this.IS1 = IS1;
             return true;

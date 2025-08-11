@@ -11,8 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class HardwareConstants {
     public static String intakeMotor = "IM";
     public static String extensionMotor = "EM";
+    public static String extEnc = "EM";
     public static String liftMotor1 = "LM1";
+    public static String liftMotor1Enc = "LM1";
     public static String liftMotor2 = "LM2";
+    public static String liftMotor2Enc = "LM1";
     public static String frontLeftMotor = "FL";
     public static String backLeftMotor = "BL";
     public static String frontRightMotor = "FR";

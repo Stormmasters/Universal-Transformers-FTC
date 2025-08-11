@@ -17,13 +17,13 @@ public class Lift {
     public void resetSlides(){
         liftPID1.resetSlides();
     }
-    public boolean initialize(DcMotorEx liftMotor1, DcMotorEx liftMotor2){
+    public boolean initialize(DcMotorEx liftMotor1, DcMotorEx liftEnc1, DcMotorEx liftMotor2, DcMotorEx liftEnc2){
         if (!isInitialized){
             Logger.info("Init started");
             //arm = hardwareMap.get(ServoImplEx.class, "arm");
             isInitialized = true;
-            liftPID1 = new SlidesPID(liftMotor1, 0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
-            liftPID2 = new SlidesPID(liftMotor2, 0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
+            liftPID1 = new SlidesPID(liftMotor1, liftEnc1,0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
+            liftPID2 = new SlidesPID(liftMotor2, liftEnc2,0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
             Logger.info("Successfully initialized");
             return true;
         }

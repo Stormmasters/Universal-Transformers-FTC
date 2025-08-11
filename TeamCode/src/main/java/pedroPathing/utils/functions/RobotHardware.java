@@ -17,6 +17,7 @@ public class RobotHardware {
     public final DcMotorEx extensionMotor;
     public final DcMotorEx liftMotor1, liftMotor2;
     public final DcMotorEx FL, BL, FR, BR;
+    public final DcMotorEx liftEnc2, liftEnc1, extEnc;
     public final Servo IS1, IS2;
     public RobotHardware(HardwareMap hardwareMap) {
         hubs = hardwareMap.getAll(LynxModule.class);
@@ -34,16 +35,22 @@ public class RobotHardware {
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
+        extEnc = hardwareMap.get(DcMotorEx.class, HardwareConstants.extEnc);
+
         // Lift motors
         liftMotor1 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor1);
         liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
+        liftEnc1 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor1Enc);
+
         liftMotor2 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor2);
         liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        liftEnc2 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor2Enc);
 
         // Drive motors
         FL = hardwareMap.get(DcMotorEx.class, HardwareConstants.frontLeftMotor);

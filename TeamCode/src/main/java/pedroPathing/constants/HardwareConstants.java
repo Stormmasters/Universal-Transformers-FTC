@@ -24,5 +24,7 @@ public class HardwareConstants {
     public static String frontLeftEnc = "FL";
     public static double frontLeftEncDirection = Encoder.FORWARD;
     public static String iServo1 = "IS1";
+    public static double iServo1Retracted = 0.95;
+    public static double iServo1Extended= 0.48;
     public static String iServo2 = "IS2";
 }

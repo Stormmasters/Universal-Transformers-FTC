@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import pedroPathing.constants.ExtensionPIDConstants;
+import pedroPathing.constants.HardwareConstants;
 import pedroPathing.constants.LiftPIDConstants;
 import pedroPathing.utils.controllers.SlidesPID;
 
@@ -31,7 +32,7 @@ public class Extension {
             Logger.info("Extending slides...");
             extensionPID.setTarget(ExtensionPIDConstants.extendedPosition);
             isExtended = true;
-            IS1.setPosition(0.48);
+            IS1.setPosition(HardwareConstants.iServo1Extended);
             return true;
         }
         else if (!isInitialized){
@@ -46,9 +47,9 @@ public class Extension {
     public boolean retract() {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
-            extensionPID.setTarget(LiftPIDConstants.retractedPosition);
+            extensionPID.setTarget(ExtensionPIDConstants.retractedPosition);
             isExtended = false;
-            IS1.setPosition(0.75);
+            IS1.setPosition(HardwareConstants.iServo1Retracted);
             return true;
         }
         else if (!isInitialized){

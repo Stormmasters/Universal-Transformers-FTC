@@ -51,8 +51,8 @@ public class RobotHardware {
         FR = hardwareMap.get(DcMotorEx.class, HardwareConstants.frontRightMotor);
         BR = hardwareMap.get(DcMotorEx.class, HardwareConstants.backRightMotor);
 
-        IS1 = hardwareMap.get(Servo.class, "IS1");
-        IS2 = hardwareMap.get(Servo.class, "IS2");
+        IS1 = hardwareMap.get(Servo.class, HardwareConstants.iServo1);
+        IS2 = hardwareMap.get(Servo.class, HardwareConstants.iServo2);
     }
 
     public void clearBulkCache() {

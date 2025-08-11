@@ -2,7 +2,7 @@ package pedroPathing.constants;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class LIftPIDConstants {
+public class LiftPIDConstants {
     public static double retractedPosition = 0;
     public static double extendedPosition = 500;
     public static double kP = 0.06;

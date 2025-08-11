@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import pedroPathing.utils.controllers.SlidesPID;
 import pedroPathing.utils.functions.RobotHardware;
 import pedroPathing.utils.functions.ChassisController;
 import pedroPathing.utils.functions.Extension;
 import pedroPathing.utils.functions.Logger;
 import pedroPathing.utils.functions.Lift;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "FraserTeleOp Version 0.5")
 public class FraserTeleOp extends OpMode {
@@ -20,15 +20,15 @@ public class FraserTeleOp extends OpMode {
     double sensitivity = 1;
     private boolean lBumper = false, rBumper = false;
     RobotHardware robotHardware;
-
+    Servo IS1, IS2;
     @Override
     public void init() {
         Logger.disable();
         Logger.info("TeleOp Initialized");
         robotHardware = new RobotHardware(hardwareMap);
         chassis.initialize(robotHardware.FL, robotHardware.BL, robotHardware.FR, robotHardware.BR);
-        lift.initialize(robotHardware.liftMotor);
-        extension.initialize(robotHardware.extensionMotor);
+        lift.initialize(robotHardware.liftMotor1, robotHardware.liftMotor2);
+        extension.initialize(robotHardware.extensionMotor, robotHardware.IS1);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FraserTeleOp extends OpMode {
         else {
             rBumper = false;
         }
-        if (gamepad1.left_bumper) {
+        if (gamepad1.right_bumper) {
             if (extension.isExtended() && !lBumper){
                 extension.retract();
             }
@@ -62,24 +62,21 @@ public class FraserTeleOp extends OpMode {
             lBumper = false;
         }
         if (gamepad1.dpad_up && sensitivity < 1){
-            sensitivity += 0.01;
+            sensitivity += 0.004;
         }
         if (gamepad1.dpad_down && sensitivity > 0.1){
-            sensitivity -= 0.01;
+            sensitivity -= 0.004;
         }
-        if (gamepad1.dpad_left){
-            robotHardware.hangMotor.setPower(1);
+        if (gamepad1.dpad_up && gamepad1.left_bumper){
+            sensitivity = 1;
         }
-        else if (gamepad1.dpad_right){
-            robotHardware.hangMotor.setPower(-1);
-        }
-        else {
-            robotHardware.hangMotor.setPower(0);
+        if (gamepad1.dpad_down && gamepad1.left_bumper){
+            sensitivity = 0;
         }
         robotHardware.intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-        extension.update();
-        lift.update();
+        telemetry.addData("extension", extension.getExtensionPosition());
         telemetry.update();
+        extension.update();
     }
 
     @Override

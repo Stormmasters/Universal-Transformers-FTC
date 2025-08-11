@@ -12,10 +12,10 @@ public class ChassisController {
     // e.g, LX is left controller x axis
     public boolean update(double LX, double LY, double RX, double sensitivity){
         if (isInitialized){
-            FL.setPower((-LY - LX - RX) * sensitivity); //reversed
-            BL.setPower((-LY + LX - RX) * sensitivity); //reversed
-            FR.setPower((LY + LX - RX) * sensitivity);
-            BR.setPower((LY - LX - RX) * sensitivity);
+            FL.setPower((LY - LX - RX * 0.7) * sensitivity); //reversed
+            BL.setPower(-(LY + LX - RX * 0.7) * sensitivity); //reversed
+            FR.setPower(-(LY + LX + RX * 0.7) * sensitivity);
+            BR.setPower(-(LY - LX + RX * 0.7) * sensitivity);
             return true;
         }
         else if (!isInitialized){

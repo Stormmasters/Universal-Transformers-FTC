@@ -1,21 +1,24 @@
 package pedroPathing.utils.functions;
 
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import pedroPathing.constants.ExtensionPIDConstants;
-import pedroPathing.constants.LIftPIDConstants;
+import pedroPathing.constants.LiftPIDConstants;
 import pedroPathing.utils.controllers.SlidesPID;
 
 public class Extension {
     private boolean isExtended = false, isInitialized = false;
     private SlidesPID extensionPID;
     private double targetPosition;
-    public boolean initialize(DcMotorEx extensionMotor){
+    Servo IS1;
+    public boolean initialize(DcMotorEx extensionMotor, Servo IS1){
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
             extensionPID = new SlidesPID(extensionMotor, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
             Logger.info("Successfully initialized");
+            this.IS1 = IS1;
             return true;
         }
         else {
@@ -26,8 +29,9 @@ public class Extension {
     public boolean extend() {
         if (isInitialized && !isExtended){
             Logger.info("Extending slides...");
-            extensionPID.setTarget(LIftPIDConstants.extendedPosition);
+            extensionPID.setTarget(ExtensionPIDConstants.extendedPosition);
             isExtended = true;
+            IS1.setPosition(0.48);
             return true;
         }
         else if (!isInitialized){
@@ -42,8 +46,9 @@ public class Extension {
     public boolean retract() {
         if (isInitialized && isExtended){
             Logger.info("Retracting slides...");
-            extensionPID.setTarget(LIftPIDConstants.retractedPosition);
+            extensionPID.setTarget(LiftPIDConstants.retractedPosition);
             isExtended = false;
+            IS1.setPosition(0.75);
             return true;
         }
         else if (!isInitialized){
@@ -54,6 +59,10 @@ public class Extension {
             Logger.error("Failed to retract slides; already retracted");
             return false;
         }
+    }
+
+    public int getExtensionPosition(){
+        return extensionPID.getCurrentPosition();
     }
     public boolean isExtended() {
         return isExtended;

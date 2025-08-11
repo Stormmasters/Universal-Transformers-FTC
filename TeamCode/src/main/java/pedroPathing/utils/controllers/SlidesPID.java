@@ -41,6 +41,11 @@ public class SlidesPID {
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // this totally wont cause problems later lol
     }
+
+    public int getCurrentPosition(){
+        return slideMotor.getCurrentPosition();
+    }
+
     public void update() {
         // PID control loop explanation:
         // There are three different values in PID control loops.

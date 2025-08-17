@@ -12,14 +12,15 @@ public class Extension {
     private boolean isExtended = false, isInitialized = false;
     private SlidesPID extensionPID;
     private double targetPosition;
-    Servo IS1;
-    public boolean initialize(DcMotorEx extensionMotor, DcMotorEx extEnc, Servo IS1){
+    Servo IS1, IS2;
+    public boolean initialize(DcMotorEx extensionMotor, DcMotorEx extEnc, Servo IS1, Servo IS2){
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
             extensionPID = new SlidesPID(extensionMotor, extEnc, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
             Logger.info("Successfully initialized");
             this.IS1 = IS1;
+            this.IS2 = IS2;
             return true;
         }
         else {
@@ -33,6 +34,7 @@ public class Extension {
             extensionPID.setTarget(ExtensionPIDConstants.extendedPosition);
             isExtended = true;
             IS1.setPosition(HardwareConstants.iServo1Extended);
+            IS2.setPosition(HardwareConstants.iServo2Extended);
             return true;
         }
         else if (!isInitialized){
@@ -50,6 +52,7 @@ public class Extension {
             extensionPID.setTarget(ExtensionPIDConstants.retractedPosition);
             isExtended = false;
             IS1.setPosition(HardwareConstants.iServo1Retracted);
+            IS2.setPosition(HardwareConstants.iServo2Retracted);
             return true;
         }
         else if (!isInitialized){

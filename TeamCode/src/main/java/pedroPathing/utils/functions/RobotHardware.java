@@ -18,7 +18,7 @@ public class RobotHardware {
     public final DcMotorEx liftMotor1, liftMotor2;
     public final DcMotorEx FL, BL, FR, BR;
     public final DcMotorEx liftEnc2, liftEnc1, extEnc;
-    public final Servo IS1, IS2;
+    public final Servo IS1, IS2, ARM1, ARM2, CLAW;
     public RobotHardware(HardwareMap hardwareMap) {
         hubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -60,6 +60,11 @@ public class RobotHardware {
 
         IS1 = hardwareMap.get(Servo.class, HardwareConstants.iServo1);
         IS2 = hardwareMap.get(Servo.class, HardwareConstants.iServo2);
+
+        ARM1 = hardwareMap.get(Servo.class, HardwareConstants.arm1);
+        ARM2 = hardwareMap.get(Servo.class, HardwareConstants.arm2);
+
+        CLAW = hardwareMap.get(Servo.class, HardwareConstants.claw);
     }
 
     public void clearBulkCache() {

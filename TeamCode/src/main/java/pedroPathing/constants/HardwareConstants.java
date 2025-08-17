@@ -30,4 +30,13 @@ public class HardwareConstants {
     public static double iServo1Retracted = 0.95;
     public static double iServo1Extended= 0.48;
     public static String iServo2 = "IS2";
+    public static double iServo2Retracted = 0.95;
+    public static double iServo2Extended= 0.48;
+    public static String arm1 = "ARM1";
+    public static double arm1Extended = 0.1;
+    public static double arm1Retracted = 1;
+    public static String arm2 = "ARM2";
+    public static double arm2Extended = 0.1;
+    public static double arm2Retracted = 1;
+    public static String claw = "CLAW";
 }

@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import pedroPathing.utils.functions.Logger;
 
 public class SlidesPID {
-    private final DcMotorEx slideMotor;
+    private final DcMotorEx slideMotor, slideEnc;
     private boolean isReversed;
     private double targetPosition;
     private final double kP, kD;
     private double maxPower = 0.8;
     private double error = 0, lastError = 0, derivative = 0;
     private int currentPosition;
-    public SlidesPID(DcMotorEx slideMotor, double initialTarget, double kP, double kD, boolean isReversed, double maxPower) {
+    public SlidesPID(DcMotorEx slideMotor, DcMotorEx slideEnc, double initialTarget, double kP, double kD, boolean isReversed, double maxPower) {
         this.slideMotor = slideMotor;
         slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -23,6 +23,7 @@ public class SlidesPID {
         if (isReversed){
             slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
         }
+        this.slideEnc = slideEnc;
         this.targetPosition = initialTarget;
         this.kP = kP;
         this.kD = kD;
@@ -39,7 +40,6 @@ public class SlidesPID {
     public void resetSlides(){
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // this totally wont cause problems later lol
     }
 
     public int getCurrentPosition(){
@@ -47,42 +47,6 @@ public class SlidesPID {
     }
 
     public void update() {
-        // PID control loop explanation:
-        // There are three different values in PID control loops.
-        // There is the error, which is just the difference between
-        // the current position and the target position; There's the
-        // integral, which is exactly what you would think it would
-        // be if you've ever taken a calculus class: it's the sum
-        // of the errors over time. Finally, there's the derivative:
-        // it's the error minus the previous error. Generally, the
-        // the main value is the error. The other values result in
-        // uncontrollability when used in excess, and thus are given
-        // very small k-values. (k-values being the coefficients of
-        // each value)
-
-        // This might all seem a bit counterintuitive. (It is.) The
-        // answer to how this works relates to how all of these variables
-        // change. Let's say, for example, that the slides start far away
-        // from the target. The error, which relates linearly to the
-        // distance from the target, immediately increases rapidly. The
-        // other values, being not quite as significant, don't increase very
-        // much and are given low k-values anyway.
-
-        // Once the motor reaches a hundred or so units from the target
-        // position, things start to slow down. (It should be noted that
-        // it was always decreasing, but the motorPower only is below the
-        // maxPower once it gets really close to the target since the PID
-        // values are unaware of the maxPower variable and would try to
-        // literally break the sound barrier if they were far enough away
-        // from the target.)
-
-        // At this point, the motor begins to slow as a result of a rapidly
-        // decreasing error. Once it reaches point 50 (which will prob be
-        // given a configurable variable sometime), the integral is given
-        // an actual value, but error has decreased by a lot. By point zero,
-        // it's mostly stopped and quickly accounts for the error. And that's
-        // how it works. --Fraser
-
         error = targetPosition - slideMotor.getCurrentPosition();
 
         derivative = error - lastError;

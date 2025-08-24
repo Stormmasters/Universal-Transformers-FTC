@@ -44,7 +44,7 @@ public class SlidesPID {
     }
 
     public void update() {
-        error = targetPosition - slideMotor.getCurrentPosition();
+        error = targetPosition - slideEnc.getCurrentPosition();
 
         derivative = error - lastError;
         lastError = error;

@@ -41,14 +41,16 @@ public class RobotHardware {
         liftMotor1 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor1);
         liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor1.setDirection(HardwareConstants.liftMotor1Dir);
 
         liftEnc1 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor1Enc);
 
         liftMotor2 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor2);
         liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor2.setDirection(HardwareConstants.liftMotor2Dir);
 
         liftEnc2 = hardwareMap.get(DcMotorEx.class, HardwareConstants.liftMotor2Enc);
 

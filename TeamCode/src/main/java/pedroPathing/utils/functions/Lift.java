@@ -2,7 +2,6 @@ package pedroPathing.utils.functions;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import pedroPathing.constants.HardwareConstants;
 import pedroPathing.constants.LiftPIDConstants;
@@ -23,8 +22,8 @@ public class Lift {
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
-            liftPID1 = new SlidesPID(liftMotor1, liftEnc1,0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
-            liftPID2 = new SlidesPID(liftMotor2, liftEnc2,0, LiftPIDConstants.kP, LiftPIDConstants.kD, true, LiftPIDConstants.maxPower);
+            liftPID1 = new SlidesPID(liftMotor1, liftEnc1,0, LiftPIDConstants.kP, LiftPIDConstants.kD, HardwareConstants.liftMotor1Dir, LiftPIDConstants.maxPower);
+            liftPID2 = new SlidesPID(liftMotor2, liftEnc2,0, LiftPIDConstants.kP, LiftPIDConstants.kD, HardwareConstants.liftMotor2Dir, LiftPIDConstants.maxPower);
             this.ARM1 = ARM1;
             this.ARM2 = ARM2;
             ARM2.setDirection(Servo.Direction.REVERSE);
@@ -73,6 +72,9 @@ public class Lift {
             Logger.error("Failed to retract slides; already retracted");
             return false;
         }
+    }
+    public int getLiftPosition(){
+        return liftPID1.getCurrentPosition();
     }
     public void update(){
         liftPID1.update(); liftPID2.update();

@@ -4,8 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import pedroPathing.utils.functions.RobotHardware;
 import pedroPathing.utils.functions.ChassisController;
@@ -85,10 +83,14 @@ public class FraserTeleOp extends OpMode {
         }
         robotHardware.intakeMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
         telemetry.addData("extension", extension.getExtensionPosition());
+        telemetry.addData("lift", lift.getLiftPosition());
         telemetry.update();
         extension.update();
+        lift.update();
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("extension", extension.getExtensionPosition());
+        packet.put("lift", lift.getLiftPosition());
+        packet.put("liftPower", robotHardware.liftMotor1.getPower());
         dashboard.sendTelemetryPacket(packet);
     }
 

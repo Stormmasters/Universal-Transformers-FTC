@@ -17,7 +17,7 @@ public class Extension {
         if (!isInitialized){
             Logger.info("Init started");
             isInitialized = true;
-            extensionPID = new SlidesPID(extensionMotor, extEnc, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, true, ExtensionPIDConstants.maxPower);
+            extensionPID = new SlidesPID(extensionMotor, extEnc, 0, ExtensionPIDConstants.kP, ExtensionPIDConstants.kD, HardwareConstants.extensionMotorDir, ExtensionPIDConstants.maxPower);
             Logger.info("Successfully initialized");
             this.IS1 = IS1;
             this.IS2 = IS2;
